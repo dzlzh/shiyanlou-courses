@@ -55,7 +55,7 @@ if ($cookie) {
             $tagUrl = $coursesTagUrl . '&page=' . $page;
             // echo $tagUrl , "\n";
             $tagHtml = curl_html($tagUrl, $userAgent, $cookie);
-            $isMatched = preg_match_all('/<a[^(class)]*class="course-box"[^(href)]*href="([^"]+)">/i', $tagHtml, $matches);
+            $isMatched = preg_match_all('/<a\s*class="course-box"\s*href="([^"]+)">/i', $tagHtml, $matches);
             if ($isMatched) {
                 $coursesUrl = array_merge_recursive($coursesUrl, $matches[1]);
             } else {
@@ -63,22 +63,30 @@ if ($cookie) {
             }
             $page++;
         }
-
+ 
         foreach ($coursesUrl as $courseUrl) {
             // echo $courseUrl, "\n";
             $courseHtml = curl_html($url['root'] . $courseUrl, $userAgent, $cookie);
             //课程名字
-            $isMatched = preg_match('/<h4\s*[^(class)]*class="pull-left[^>]*>\s*<span>([^<]+)<\/span>\s*<\/h4>/i', $courseHtml, $matches);
+            $isMatched = preg_match('/<h4\s*class="pull-left[^>]*>\s*<span>([^<]+)<\/span>\s*<\/h4>/i', $courseHtml, $matches);
             if ($isMatched) {
                 $courseName = $matches[1];
                 $contents[$value][] = $courseName;
             }
+            // echo $courseName, "\n";
+            // die;
             //课程内容URL
             $isMatched = preg_match_all('/\/courses\/\d+\/labs\/\d+\/document/i', $courseHtml, $matches);
             if ($isMatched) {
                 //课程内容
                 foreach ($matches[0] as $documentUrl) {
                     // echo $documentUrl, "\n";
+                    $documentHtml = curl_html($url['root'] . $documentUrl, $userAgent, $cookie);
+                    $isMatched = preg_match('/<textarea[^>]*>([^<]*)<\/textarea>/i', $documentHtml, $matches);
+                    if ($isMatched) {
+                        $document = $matches[1];
+                    }
+                    // echo $document, "\n";
                     die;
                 }
             }
