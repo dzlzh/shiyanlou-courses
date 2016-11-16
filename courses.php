@@ -79,9 +79,14 @@ if ($cookie) {
             $isMatched = preg_match_all('/\/courses\/\d+\/labs\/\d+\/document/i', $courseHtml, $matches);
             if ($isMatched) {
                 //课程内容
-                foreach ($matches[0] as $documentUrl) {
+                foreach ($matches[0] as $k => $documentUrl) {
                     // echo $documentUrl, "\n";
                     $documentHtml = curl_html($url['root'] . $documentUrl, $userAgent, $cookie);
+                    //小节名字
+                    $isMatched = preg_match('/<li\s*class="active">([^<]*)<\/li>/i', $documentHtml, $matches);
+                    $documentName = $isMatched ? $k . '.' .trim($matches[1], " \t\n\r\0\x0B") : $k;
+                    // echo $documentName;
+                    //课程Markdown
                     $isMatched = preg_match('/<textarea[^>]*>([^<]*)<\/textarea>/i', $documentHtml, $matches);
                     if ($isMatched) {
                         $document = $matches[1];
