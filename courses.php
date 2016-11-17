@@ -16,7 +16,6 @@
 require_once 'config.php';
 
 if (!file_exists('cookie')) {
-    var_dump(1);
     $login = curl_html($url['login'], $userAgent, null, null, null, 1);
     $cookieIsMatched = preg_match('/Set-Cookie:\s*(.*)/', $login, $matches);
     if ($cookieIsMatched) {
@@ -87,17 +86,22 @@ if ($cookie) {
                     $documentName = $isMatched ? $k . '.' .trim($matches[1], " \t\n\r\0\x0B") : $k;
                     // echo $documentName;
                     //课程Markdown
-                    $isMatched = preg_match('/<textarea[^>]*>([^<]*)<\/textarea>/i', $documentHtml, $matches);
-                    if ($isMatched) {
-                        $document = $matches[1];
+                    $path = $basePath . $value . DIRECTORY_SEPARATOR . $courseName . DIRECTORY_SEPARATOR;
+                    $fileName = $path . $documentName . '.md';
+                    if (!file_exists($fileName)) {
+                        $isMatched = preg_match('/<textarea[^>]*>([^<]*)<\/textarea>/i', $documentHtml, $matches);
+                        if ($isMatched) {
+                            $document = $matches[1];
+                            if (mk_dir($path)) {
+                                file_put_contents($fileName, $document) || exit;
+                            }
+                        }
+                    } else {
+                        echo $fileName, "  --  exists\n";
                     }
                     // echo $document, "\n";
-                    die;
                 }
             }
-            die;
         }
-        die;
     }
-
 }
