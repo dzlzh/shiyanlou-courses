@@ -67,7 +67,11 @@ if ($cookie) {
             // echo $courseUrl, "\n";
             $courseHtml = curl_html($url['root'] . $courseUrl, $userAgent, $cookie);
             //课程名字
-            $isMatched = preg_match('/<h4\s*class="pull-left[^>]*>\s*<span>([^<]+)<\/span>\s*<\/h4>/i', $courseHtml, $matches);
+            if ($coursesParam['fee'] == 'limited') {
+                $isMatched = preg_match('/course-infobox-type[^<]*<\/span>\s*<span>([^<]*)/i', $courseHtml, $matches);
+            } else {
+                $isMatched = preg_match('/<h4\s*class="pull-left[^>]*>\s*<span>([^<]+)<\/span>\s*<\/h4>/i', $courseHtml, $matches);
+            }
             if ($isMatched) {
                 $courseName = $matches[1];
                 $directory[$value][] = $courseName;
