@@ -70,7 +70,7 @@ if ($cookie) {
             $isMatched = preg_match('/<h4\s*class="pull-left[^>]*>\s*<span>([^<]+)<\/span>\s*<\/h4>/i', $courseHtml, $matches);
             if ($isMatched) {
                 $courseName = $matches[1];
-                $contents[$value][] = $courseName;
+                $directory[$value][] = $courseName;
             }
             // echo $courseName, "\n";
             // die;
@@ -103,5 +103,14 @@ if ($cookie) {
                 }
             }
         }
+    }
+    foreach ($directory as $key => $value) {
+        echo '[', $key, '](', $basePath, $key, ")\n"; 
+        if (is_array($value)) {
+            foreach ($value as $v) {
+                echo '- [', $v, '](', $basePath, $key, DIRECTORY_SEPARATOR, $v, ")\n"; 
+            }
+        }
+        echo "\n";
     }
 }
