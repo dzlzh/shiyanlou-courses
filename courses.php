@@ -86,8 +86,8 @@ if ($cookie) {
                     $documentName = $isMatched ? $k . '.' .trim($matches[1], " \t\n\r\0\x0B") : $k;
                     // echo $documentName;
                     //课程Markdown
-                    $path = $basePath . $value . DIRECTORY_SEPARATOR . $courseName . DIRECTORY_SEPARATOR;
-                    $fileName = $path . $documentName . '.md';
+                    $path = $basePath . str_replace('/', '&', trim($value)) . DIRECTORY_SEPARATOR . str_replace('/', '&', trim($courseName)) . DIRECTORY_SEPARATOR;
+                    $fileName = $path . str_replace('/', '&', trim($documentName)) . '.md';
                     if (!file_exists($fileName)) {
                         $isMatched = preg_match('/<textarea[^>]*>([^<]*)<\/textarea>/i', $documentHtml, $matches);
                         if ($isMatched) {
@@ -105,10 +105,10 @@ if ($cookie) {
         }
     }
     foreach ($directory as $key => $value) {
-        echo '[', $key, '](', $basePath, $key, ")\n"; 
+        echo '[', $key, '](', $basePath, str_replace('/', '&', trim($key)), ")\n"; 
         if (is_array($value)) {
             foreach ($value as $v) {
-                echo '- [', $v, '](', $basePath, $key, DIRECTORY_SEPARATOR, $v, ")\n"; 
+                echo '- [', $v, '](', $basePath,  str_replace('/', '&', trim($key)), DIRECTORY_SEPARATOR,  str_replace('/', '&', trim($v)), ")\n"; 
             }
         }
         echo "\n";
