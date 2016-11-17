@@ -50,3 +50,13 @@ function curl_html($url, $userAgent = null, $cookie = null, $param = null, $file
     }
     return $error;
 }
+
+//递归创建目录
+function mk_dir($path)
+{
+    if (is_dir($path)) {
+        return true;
+    }
+    return is_dir(dirname($path)) || mk_dir(dirname($path)) ? mkdir($path) : false;
+}
+
